@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Peta Pemasangan Indonesia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <style>
+    body { margin:0; padding:0; }
+    #map { width:100%; height:100vh; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    // Inisialisasi peta
+    const map = L.map("map").setView([-2.2100, 117.9213], 4);
+
+    // Tile gratis dari OpenStreetMap
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: "&copy; OpenStreetMap contributors"
+    }).addTo(map);
+
+    // Data pemasangan
+    const pemasangan = [
+      { lokasi: "Sumatera", koordinat: [0.5, 101.5], jumlah: "3.000 Unit" },
+      { lokasi: "Jabodetabek & Jawa", koordinat: [-7.5, 110.3671], jumlah: "7.000 Unit" },
+      { lokasi: "Sulawesi & Maluku", koordinat: [-1.5, 122.0], jumlah: "500 Unit" },
+      { lokasi: "Bali & Nusa Tenggara", koordinat: [-8.5, 117.3], jumlah: "500 Unit" },
+      { lokasi: "Kalimantan", koordinat: [-1.0, 114.0], jumlah: "300 Unit" },
+      { lokasi: "Papua", koordinat: [-4.5, 138.0], jumlah: "200 Unit" }
+    ];
+
+    // Tambahkan marker + popup
+    pemasangan.forEach(item => {
+      L.marker(item.koordinat)
+        .addTo(map)
+        .bindPopup("<b>" + item.lokasi + "</b><br/>Jumlah: " + item.jumlah);
+    });
+  </script>
+</body>
+</html>
