@@ -7,8 +7,6 @@
   <!-- Leaflet CSS & JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Heatmap plugin -->
-  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
   <style>
     body { margin:0; padding:0; }
     #map { width:100%; height:100vh; }
@@ -17,52 +15,67 @@
 <body>
   <div id="map"></div>
   <script>
-    // 1. Inisialisasi peta (pusat Indonesia)
+    // Inisialisasi peta
     const map = L.map("map").setView([-2.2100, 117.9213], 4);
 
-    // 2. Tile gratis dari OpenStreetMap
+    // Tile gratis dari OpenStreetMap
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18,
       attribution: "&copy; OpenStreetMap contributors"
     }).addTo(map);
 
-    // 3. Data pemasangan (koordinat + jumlah unit)
-    const pemasangan = [
-      { lokasi: "Sumatera", koordinat: [0.5, 101.5], jumlah: 3000 },
-      { lokasi: "Jabodetabek & Jawa", koordinat: [-7.5, 110.3671], jumlah: 7000 },
-      { lokasi: "Sulawesi & Maluku", koordinat: [-1.5, 122.0], jumlah: 500 },
-      { lokasi: "Bali & Nusa Tenggara", koordinat: [-8.5, 117.3], jumlah: 500 },
-      { lokasi: "Kalimantan", koordinat: [-1.0, 114.0], jumlah: 300 },
-      { lokasi: "Papua", koordinat: [-4.5, 138.0], jumlah: 200 }
+    // === Data Wilayah (marker merah) ===
+    const wilayah = [
+      { lokasi: "Sumatera", koordinat: [0.5, 101.5], jumlah: "3.000 Unit" },
+      { lokasi: "Jabodetabek & Jawa", koordinat: [-7.5, 110.3671], jumlah: "7.000 Unit" },
+      { lokasi: "Sulawesi & Maluku", koordinat: [-1.5, 122.0], jumlah: "500 Unit" },
+      { lokasi: "Bali & Nusa Tenggara", koordinat: [-8.5, 117.3], jumlah: "500 Unit" },
+      { lokasi: "Kalimantan", koordinat: [-1.0, 114.0], jumlah: "300 Unit" },
+      { lokasi: "Papua", koordinat: [-4.5, 138.0], jumlah: "200 Unit" }
     ];
 
-    // 4. Tambahkan marker + popup
-    pemasangan.forEach(item => {
-      L.marker(item.koordinat)
+    wilayah.forEach(item => {
+      L.marker(item.koordinat, { icon: L.icon({ 
+        iconUrl: "https://maps.gstatic.com/mapfiles/ms2/micons/red-dot.png", 
+        iconSize: [32, 32], 
+        iconAnchor: [16, 32], 
+        popupAnchor: [0, -30] 
+      })})
         .addTo(map)
-        .bindPopup("<b>" + item.lokasi + "</b><br/>Jumlah: " + item.jumlah + " Unit");
+        .bindPopup("<b>" + item.lokasi + "</b><br/>Jumlah: " + item.jumlah);
     });
 
-    // 5. Buat data untuk heatmap: [lat, lng, intensitas]
-    const heatData = pemasangan.map(item => [
-      item.koordinat[0],
-      item.koordinat[1],
-      item.jumlah / 7000 // normalisasi (dibagi max jumlah = 7000)
-    ]);
+    // === Data Kota (marker biru) ===
+    const kota = [
+      { nama: "Medan", koordinat: [3.5897, 98.6785] },
+      { nama: "Padang", koordinat: [-0.9471, 100.4172] },
+      { nama: "Palembang", koordinat: [-2.9761, 104.7754] },
+      { nama: "Bogor", koordinat: [-6.595, 106.816] },
+      { nama: "Jakarta", koordinat: [-6.2088, 106.8456] },
+      { nama: "Bandung", koordinat: [-6.9175, 107.6191] },
+      { nama: "Banyumas", koordinat: [-7.514, 109.294] },
+      { nama: "Solo", koordinat: [-7.5755, 110.8243] },
+      { nama: "Yogyakarta", koordinat: [-7.8014, 110.3644] },
+      { nama: "Surabaya", koordinat: [-7.2575, 112.7521] },
+      { nama: "Bali", koordinat: [-8.4095, 115.1889] },
+      { nama: "Lombok", koordinat: [-8.6525, 116.3249] },
+      { nama: "Flores", koordinat: [-8.6574, 121.0794] },
+      { nama: "Balikpapan", koordinat: [-1.2379, 116.8529] },
+      { nama: "Banjarmasin", koordinat: [-3.3186, 114.5926] },
+      { nama: "Makassar", koordinat: [-5.1477, 119.4327] },
+      { nama: "Papua (Jayapura)", koordinat: [-2.5337, 140.7181] }
+    ];
 
-    // 6. Tambahkan heatmap layer
-    L.heatLayer(heatData, {
-      radius: 40,   // besar penyebaran titik
-      blur: 25,     // efek blur
-      maxZoom: 10,  // zoom maksimum
-      gradient: {   // warna heatmap
-        0.2: "blue",
-        0.4: "lime",
-        0.6: "yellow",
-        0.8: "orange",
-        1.0: "red"
-      }
-    }).addTo(map);
+    kota.forEach(item => {
+      L.marker(item.koordinat, { icon: L.icon({ 
+        iconUrl: "https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png", 
+        iconSize: [32, 32], 
+        iconAnchor: [16, 32], 
+        popupAnchor: [0, -30] 
+      })})
+        .addTo(map)
+        .bindPopup("<b>" + item.nama + "</b>");
+    });
   </script>
 </body>
 </html>
